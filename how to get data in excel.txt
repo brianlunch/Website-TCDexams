@@ -1,0 +1,24 @@
+replace "undefined" with nothing
+
+delete row 1
+
+replace "Module Code" with nothing
+
+replace "Module / Paper Title" with nothing
+
+replace "Paper Code" with nothing
+
+replace "Module    Code" with nothing (4 spaces)
+
+Double EN1020-1 bug
+
+click column A, go to data tab press filter click arrow on column A, untick select all.... 
+scroll to the bottom and tick blanks....press ok then highlight all rows (should be blank) and delete
+
+=INDEX($A:$A,ROW(A1)*3-3+COLUMN(A1)) copy this to C1 drag it over 3 columns and down 2000 delete zeros row
+
+copy file linkFormula.txt into row F
+
+copy values of Row C,D,E,F to other file
+
+replace 0 with nothing

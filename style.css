@@ -1,0 +1,21 @@
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #FFFFFF !important;
+}
+
+@media (min-width: 768px)
+{
+	.row-relative{position:relative;}
+	.col-border
+	{
+		padding-left:0;
+		position: 0;
+	}
+	.col-border:before
+	{
+		content "";
+		position:absolute;
+		top:0;
+		bottom:0;
+		border: 2px solid red;
+	}
+}
