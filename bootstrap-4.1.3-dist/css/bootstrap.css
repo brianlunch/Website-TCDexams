@@ -11,7 +11,7 @@
   --cyan: #17a2b8;
   --white: #FFFF;
   --gray: #6c757d;
-  --gray-dark: #003862;
+  --gray-dark: #1374B9;
   --primary: #007bff;
   --secondary: #6c757d;
   --success: #28a745;
@@ -19,7 +19,7 @@
   --warning: #E5E5E5;
   --danger: #dc3545;
   --light: #f8f9fa;
-  --dark: #003862;
+  --dark: #1374B9;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -2566,8 +2566,8 @@ fieldset:disabled a.btn {
 
 .btn-dark {
   color: #fff;
-  background-color: #003862;
-  border-color: #003862;
+  background-color: #1374B9;
+  border-color: #1374B9;
 }
 
 .btn-dark:hover {
@@ -2582,8 +2582,8 @@ fieldset:disabled a.btn {
 
 .btn-dark.disabled, .btn-dark:disabled {
   color: #fff;
-  background-color: #003862;
-  border-color: #003862;
+  background-color: #1374B9;
+  border-color: #1374B9;
 }
 
 .btn-dark:not(:disabled):not(.disabled):active, .btn-dark:not(:disabled):not(.disabled).active,
@@ -2837,16 +2837,16 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-dark {
-  color: #003862;
+  color: #1374B9;
   background-color: transparent;
   background-image: none;
-  border-color: #003862;
+  border-color: #1374B9;
 }
 
 .btn-outline-dark:hover {
   color: #fff;
-  background-color: #003862;
-  border-color: #003862;
+  background-color: #1374B9;
+  border-color: #1374B9;
 }
 
 .btn-outline-dark:focus, .btn-outline-dark.focus {
@@ -2854,15 +2854,15 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-dark.disabled, .btn-outline-dark:disabled {
-  color: #003862;
+  color: #1374B9;
   background-color: transparent;
 }
 
 .btn-outline-dark:not(:disabled):not(.disabled):active, .btn-outline-dark:not(:disabled):not(.disabled).active,
 .show > .btn-outline-dark.dropdown-toggle {
   color: #fff;
-  background-color: #003862;
-  border-color: #003862;
+  background-color: #1374B9;
+  border-color: #1374B9;
 }
 
 .btn-outline-dark:not(:disabled):not(.disabled):active:focus, .btn-outline-dark:not(:disabled):not(.disabled).active:focus,
@@ -4862,7 +4862,7 @@ input[type="button"].btn-block {
 
 .badge-dark {
   color: #fff;
-  background-color: #003862;
+  background-color: #1374B9;
 }
 
 .badge-dark[href]:hover, .badge-dark[href]:focus {
@@ -6137,7 +6137,7 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #003862 !important;
+  background-color: #1374B9 !important;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -6223,7 +6223,7 @@ button.bg-dark:focus {
 }
 
 .border-dark {
-  border-color: #003862 !important;
+  border-color: #1374B9 !important;
 }
 
 .border-white {
@@ -8904,7 +8904,7 @@ a.text-light:hover, a.text-light:focus {
 }
 
 .text-dark {
-  color: #003862 !important;
+  color: #1374B9 !important;
 }
 
 a.text-dark:hover, a.text-dark:focus {
