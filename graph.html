@@ -63,9 +63,13 @@ this.endTime=endTime;
 	let mac = params.get("mac");
 	let time = params.get("time");
 	console.log(mac); console.log(time);
-
+	
 	  	  
 	  
+	  
+		
+var lengthOfName = mac.length
+document.getElementById('message').innerHTML = lengthOfName;  
 	  /*
 	  //Write a function that takes in a mac Address and returns all devices seen that day - Time  and mac Address
 	  function getDataFromDB (mac, time){
@@ -141,7 +145,7 @@ chart.render();
 			<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js">
 
          </div>
-		
+<p id='message'></p>
       </main>
      
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
