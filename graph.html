@@ -67,9 +67,6 @@ this.endTime=endTime;
 	  	  
 	  
 	  
-		
-var lengthOfName = mac.length
-document.getElementById('message').innerHTML = lengthOfName;  
 	  /*
 	  //Write a function that takes in a mac Address and returns all devices seen that day - Time  and mac Address
 	  function getDataFromDB (mac, time){
@@ -119,7 +116,7 @@ document.getElementById('message').innerHTML = lengthOfName;
 	  
 	  //{x: uniquePerDevice (Maybe mac), label: deviceName, y:[(new Date(year, month, date, hour, mins)).getTime(),(new Date(year, month, date, hour, mins)).getTime()]}
         
-		{x:1, label: " Device Name 01 ", y: [(new Date(2016, 0, 28, 12, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()] },
+		{x:1, label: mac, y: [(new Date(2016, 0, 28, 12, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()] },
         {x:1, label: " Device Name 01 ", y: [(new Date(2016, 0, 28, 03, 00)).getTime(), (new Date(2016, 0, 28, 11, 40)).getTime()] },
         {x:2, label: " Device Name 02 ", y: [(new Date(2016, 0, 28, 13, 20)).getTime(), (new Date(2016, 0, 28, 14, 20)).getTime()] },
         {x:3, label: " Device Name 03 ", y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()] },
