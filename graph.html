@@ -153,6 +153,8 @@
         // Set the configuration for your app
         // TODO: Replace with your project's config object
         /////////////////
+		getDataFromDB(mac, time);
+		printKey();
         window.onload = function() {
             var chart = new CanvasJS.Chart("chartContainer", {
                 title: {
