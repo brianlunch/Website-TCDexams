@@ -1,152 +1,242 @@
 <!doctype html>
 <html lang="en">
-   <head>
-	<!-- Firebase App is always required and must be first -->
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
 
-<!-- Add additional services that you want to use -->
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-messaging.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-functions.js"></script>
-
-<!-- Comment out (or don't include) services that you don't want to use -->
-<!-- <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-storage.js"></script> -->
-      <meta charset="utf-8">
-      
-	  
-<script>
-
-
-class device(){
-
-constructer(xPos,macAddress, startTime, endTime){
-this.xPos=xPos;
-this.macAddress=macAddress;
-this.startTime = startTime;
-this.endTime=endTime;
+<head>
+    <!-- Firebase App is always required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
+    <!-- Add additional services that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-functions.js"></script>
+    <!-- Comment out (or don't include) services that you don't want to use -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-storage.js"></script> -->
+    <meta charset="utf-8">
+    <script>
+        var url = window.location.href;
+        console.log(url);
+        console.log("ye");
+        //This function gets the url parameters, which will be the scanner mac Adress
+        let params = (new URL(url)).searchParams;
+        let mac = params.get("mac");
+        let time = params.get("time");
+        console.log(mac);
+        console.log(time);
+        //var hashMap = {
+        //Set : function(key,value){this[key] = value},
+        //Get : function(key){return this[key]},
+        //Contains : function(key){return this.Get(key) == null?false:true},
+        // Remove : function(key){delete this[key]}
+        //}
+        function instance(start, end) {
+            this.start = start;
+            this.end = end;
+            this.getStart = function() {
+                return this.start;
+            }
+            this.getEnd = function() {
+                return this.end;
+            }
+        }
+        var config = {
+            apiKey: "AIzaSyAkvvRn8lzz-e16U8TUy0hyPMevcde6DCc",
+            authDomain: "bluesnoopcs2013.firebaseapp.com",
+            databaseURL: "https://bluesnoopcs2013.firebaseio.com",
+            projectId: "bluesnoopcs2013",
+            storageBucket: "bluesnoopcs2013.appspot.com",
+            messagingSenderId: "645759843996"
+        };
+        firebase.initializeApp(config);
+        var database = firebase.database();
+     function HashMap(){  
+   var length = 0;  
+   var obj = new Object();  
+ 
+   this.isEmpty = function(){  
+       return length == 0;  
+   };  
+	//if contains Key
+   this.containsKey=function(key){  
+       return (key in obj);  
+   };  
+ 
+   //if the key contain value
+   this.containsValue=function(value){  
+       for(var key in obj){  
+           if(obj[key] == value){  
+               return true;  
+           }  
+       }  
+       return false;  
+   };  
+  // //push  value associates with certain key
+   this.put=function(key,value){  
+       if(!this.containsKey(key)){  
+           length++;  
+       }  
+       obj[key] = value;  
+   };  
+ 
+   //get  value associates with certain key
+   this.get=function(key){  
+       return this.containsKey(key)?obj[key]:null;  
+   };  
+ 
+  //delete  value associates with certain key
+   this.remove=function(key){  
+       if(this.containsKey(key)&&(delete obj[key])){  
+           length--;  
+       }  
+   };  
+ 
+   //getValue
+   this.values=function(){  
+       var _values= new Array();  
+       for(var key in obj){  
+           _values.push(obj[key]);  
+       }  
+       return _values;  
+   };  
+ 
+   //get keys
+   this.keySet=function(){  
+       var _keys = new Array();  
+       for(var key in obj){  
+           _keys.push(key);  
+       }  
+       return _keys;  
+   };  
+ 
+  //get length
+   this.size = function(){  
+       return length;  
+   };  
+ 
+ //clear the hs
+   this.clear = function(){  
+       length = 0;  
+       obj = new Object();  
+   };  
 }
+		var hashmap = new HashMap();
+        var map = [];
+        //Write a function that takes in a mac Address and returns all devices seen that day - Time  and mac Address
+        function getDataFromDB(mac, time) {
+             database.ref('/data/' + mac + '/' + time).once('value').then(function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    var childname = childSnapshot.key;
+					var array = [];
+                    childSnapshot.forEach(function(grandChildSnapshot){
+                        grandChildSnapshot.forEach(function(greatgrandChildSnapshot) {
+                            var timestamp = +greatgrandChildSnapshot.child("Time").val();
+                            var end = +greatgrandChildSnapshot.child("Duration").val() + timestamp;
+                            array.push(new instance(timestamp, end));
+                        });
+                    });
+					hashmap.put(childname,array);
+					map[childname] = array;
+                });
+            });
+        }
+        getDataFromDB(mac, time);
+		 function printKey() {
+				for(key in map){
+				console.log(key + map[key]);
+				}
+		 }
+		 printKey;
+		/*
+		*/
+        // Set the configuration for your app
+        // TODO: Replace with your project's config object
+        /////////////////
+        window.onload = function() {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                title: {
+                    text: ""
+                },
+                axisX: {
+                    interval: 1,
+                },
+                axisY: {
+                    minimum: (new Date(2016, 0, 28, 00, 00)).getTime(),
+                    maximum: (new Date(2016, 0, 28, 23, 59)).getTime(),
+                    interval: (2 * 60 * 60 * 1000),
+                    labelFormatter: function(e) {
+                        return CanvasJS.formatDate(e.value, "H:mm");
+                    },
+                    gridThickness: 1
+                },
+                toolTip: {
+                    contentFormatter: function(e) {
+                        return "<strong>" + e.entries[0].dataPoint.label + "</strong></br> Start: " + CanvasJS.formatDate(e.entries[0].dataPoint.y[0], "H:mm TT") + "</br>End : " + CanvasJS.formatDate(e.entries[0].dataPoint.y[1], "H:mm TT");
+                    }
+                },
+                data: [{
+                    type: "rangeBar",
+                    color: "blue",
+                    dataPoints: [
+                        //{x: uniquePerDevice (Maybe mac), label: deviceName, y:[(new Date(year, month, date, hour, mins)).getTime(),(new Date(year, month, date, hour, mins)).getTime()]}
+                        {
+                            x: 1,
+                            label: mac,
+                            y: [(new Date(2016, 0, 28, 12, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()]
+                        }, {
+                            x: 1,
+                            label: " Device Name 01 ",
+                            y: [(new Date(2016, 0, 28, 03, 00)).getTime(), (new Date(2016, 0, 28, 11, 40)).getTime()]
+                        }, {
+                            x: 2,
+                            label: " Device Name 02 ",
+                            y: [(new Date(2016, 0, 28, 13, 20)).getTime(), (new Date(2016, 0, 28, 14, 20)).getTime()]
+                        }, {
+                            x: 3,
+                            label: " Device Name 03 ",
+                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
+                        }, {
+                            x: 4,
+                            label: " Device Name 04 ",
+                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
+                        }, {
+                            x: 5,
+                            label: " Device Name 05 ",
+                            y: [(new Date(2016, 0, 28, 02, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()]
+                        }, {
+                            x: 6,
+                            label: " Device Name 06 ",
+                            y: [(new Date(2016, 0, 28, 12, 30)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()]
+                        }, {
+                            x: 7,
+                            label: " Device Name 07 ",
+                            y: [(new Date(2016, 0, 28, 13, 20)).getTime(), (new Date(2016, 0, 28, 14, 20)).getTime()]
+                        }, {
+                            x: 8,
+                            label: " Device Name 08 ",
+                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
+                        }, {
+                            x: 9,
+                            label: " Device Name 09 ",
+                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
+                        }
+                    ]
+                }]
+            });
+            chart.render();
+        }
+    </script>
+</head>
 
-}
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAkvvRn8lzz-e16U8TUy0hyPMevcde6DCc",
-    authDomain: "bluesnoopcs2013.firebaseapp.com",
-    databaseURL: "https://bluesnoopcs2013.firebaseio.com",
-    projectId: "bluesnoopcs2013",
-    storageBucket: "bluesnoopcs2013.appspot.com",
-    messagingSenderId: "645759843996"
-  };
-  firebase.initializeApp(config);
-  
-    var database = firebase.database();
-	
-</script>
-	  
-	  
-	  
-	  <script>
-	  
-	   var url = window.location.href;
-	  console.log(url);
-	  
-	  
-	  console.log("ye");
-	  
-	  
-	  
-		
-//This function gets the url parameters, which will be the scanner mac Adress
+<body>
+<div class="container-fluid bg-light">
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js">
+            < /div> < p id = 'message' > < /p> < /main>
+            < script src = "https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity = "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin = "anonymous" >
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+</body>
 
-	let params = (new URL(url)).searchParams;
-	let mac = params.get("mac");
-	let time = params.get("time");
-	console.log(mac); console.log(time);
-	
-	  	  
-	  
-	  
-	  /*
-	  //Write a function that takes in a mac Address and returns all devices seen that day - Time  and mac Address
-	  function getDataFromDB (mac, time){
-	  
-		
-	  }
-	  
-	  
-	  getDataFromDB(mac,time);
-	  */
-	  
-	  
-	  
-	  
-	  // Set the configuration for your app
-  // TODO: Replace with your project's config object
-  /////////////////
-	  window.onload = function () {
-	var chart = new CanvasJS.Chart("chartContainer",
-                               {
-  title: {
-    text: ""
-  },
-  axisX: {
-  interval:1,
-  },
-  axisY: {
-    minimum: (new Date(2016, 0, 28, 00, 00)).getTime(), 
-    maximum:(new Date(2016, 0, 28, 23, 59)).getTime(),
-    interval: (2 * 60 * 60 * 1000),
-    labelFormatter: function(e){
-      return CanvasJS.formatDate(e.value, "H:mm");
-    },
-    gridThickness: 1
-  },
-
-  toolTip:{
-    contentFormatter: function ( e ) {
-      return "<strong>" + e.entries[0].dataPoint.label + "</strong></br> Start: " +  CanvasJS.formatDate(e.entries[0].dataPoint.y[0], "H:mm TT") + "</br>End : " +  CanvasJS.formatDate(e.entries[0].dataPoint.y[1], "H:mm TT");  
-    }},
-
-  data: [
-    {
-      type: "rangeBar",
-	  color:"blue",	
-      dataPoints: [
-	  
-	  //{x: uniquePerDevice (Maybe mac), label: deviceName, y:[(new Date(year, month, date, hour, mins)).getTime(),(new Date(year, month, date, hour, mins)).getTime()]}
-        
-		{x:1, label: mac, y: [(new Date(2016, 0, 28, 12, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()] },
-        {x:1, label: time, y: [(new Date(2016, 0, 28, 03, 00)).getTime(), (new Date(2016, 0, 28, 11, 40)).getTime()] },
-        {x:2, label: " Device Name 02 ", y: [(new Date(2016, 0, 28, 13, 20)).getTime(), (new Date(2016, 0, 28, 14, 20)).getTime()] },
-        {x:3, label: " Device Name 03 ", y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()] },
-        {x:4, label: " Device Name 04 ", y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()] },
-		{x:5, label: " Device Name 05 ", y: [(new Date(2016, 0, 28, 02, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()] },
-        {x:6, label: " Device Name 06 ", y: [(new Date(2016, 0, 28, 12, 30)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()] },
-        {x:7, label: " Device Name 07 ", y: [(new Date(2016, 0, 28, 13, 20)).getTime(), (new Date(2016, 0, 28, 14, 20)).getTime()] },
-        {x:8, label: " Device Name 08 ", y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()] },
-        {x:9, label: " Device Name 09 ", y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()] }
-        
-      ]
-    }
-  ]                      
-});
-chart.render();
-
-}
-</script>
-   </head>
-   <body>
-         <div class="container-fluid bg-light">
-            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-			<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js">
-
-         </div>
-<p id='message'></p>
-      </main>
-     
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-      
-   </body>
 </html>
