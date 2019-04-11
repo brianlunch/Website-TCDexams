@@ -62,7 +62,7 @@
                     childSnapshot.forEach(function(grandChildSnapshot) {
                         grandChildSnapshot.forEach(function(greatgrandChildSnapshot) {
                             var timestamp = +greatgrandChildSnapshot.child("Time").val();
-                            var end = +greatgrandChildSnapshot.child("Duration").val() + (timestamp*1000);
+                            var end = +greatgrandChildSnapshot.child("Duration").val() + (timestamp);
                             array.push(new instance(timestamp, end));
                         });
                     });
