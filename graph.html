@@ -62,7 +62,7 @@
                     childSnapshot.forEach(function(grandChildSnapshot) {
                         grandChildSnapshot.forEach(function(greatgrandChildSnapshot) {
                             var timestamp = +greatgrandChildSnapshot.child("Time").val();
-                            var end = +greatgrandChildSnapshot.child("Duration").val() + timestamp;
+                            var end = +greatgrandChildSnapshot.child("Duration").val() + (timestamp*1000);
                             array.push(new instance(timestamp, end));
                         });
                     });
@@ -122,7 +122,7 @@
 			{
 				x: 0,
 				label : list[0],
-				y : [list[1],list[2]]
+				y : [list[1]*1000,list[2]*1000]
 			}
 			]
 			for(var i = 0 ;i <list.length;i=i+3){
@@ -130,7 +130,7 @@
 				dataSet.push({
 				x: i/3,
 				label : list[i],
-				y : [list[i+1],list[i+2]],
+				y : [(list[i+1]*1000),(list[i+2]*1000)],
 			});
 			}
 			console.log(list[i+2]);
