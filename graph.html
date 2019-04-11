@@ -13,6 +13,8 @@
     <!-- Comment out (or don't include) services that you don't want to use -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-storage.js"></script> -->
     <meta charset="utf-8">
+	
+
     <script>
         var url = window.location.href;
         console.log(url);
@@ -49,127 +51,105 @@
         };
         firebase.initializeApp(config);
         var database = firebase.database();
-     function HashMap(){  
-   var length = 0;  
-   var obj = new Object();  
- 
-   this.isEmpty = function(){  
-       return length == 0;  
-   };  
-	//if contains Key
-   this.containsKey=function(key){  
-       return (key in obj);  
-   };  
- 
-   //if the key contain value
-   this.containsValue=function(value){  
-       for(var key in obj){  
-           if(obj[key] == value){  
-               return true;  
-           }  
-       }  
-       return false;  
-   };  
-  // //push  value associates with certain key
-   this.put=function(key,value){  
-       if(!this.containsKey(key)){  
-           length++;  
-       }  
-       obj[key] = value;  
-   };  
- 
-   //get  value associates with certain key
-   this.get=function(key){  
-       return this.containsKey(key)?obj[key]:null;  
-   };  
- 
-  //delete  value associates with certain key
-   this.remove=function(key){  
-       if(this.containsKey(key)&&(delete obj[key])){  
-           length--;  
-       }  
-   };  
- 
-   //getValue
-   this.values=function(){  
-       var _values= new Array();  
-       for(var key in obj){  
-           _values.push(obj[key]);  
-       }  
-       return _values;  
-   };  
- 
-   //get keys
-   this.keySet=function(){  
-       var _keys = new Array();  
-       for(var key in obj){  
-           _keys.push(key);  
-       }  
-       return _keys;  
-   };  
- 
-  //get length
-   this.size = function(){  
-       return length;  
-   };  
- 
- //clear the hs
-   this.clear = function(){  
-       length = 0;  
-       obj = new Object();  
-   };  
-}
-		var hashmap = new HashMap();
-        var map = [];
+		var list = [];
         //Write a function that takes in a mac Address and returns all devices seen that day - Time  and mac Address
-        function getDataFromDB(mac, time) {
-             database.ref('/data/' + mac + '/' + time).once('value').then(function(snapshot) {
+        async function getDataFromDB(mac, time) {
+            var map = [];
+            await database.ref('/data/' + mac + '/' + time).once('value').then(function(snapshot) {
                 snapshot.forEach(function(childSnapshot) {
                     var childname = childSnapshot.key;
-					var array = [];
-                    childSnapshot.forEach(function(grandChildSnapshot){
+                    var array = [];
+                    childSnapshot.forEach(function(grandChildSnapshot) {
                         grandChildSnapshot.forEach(function(greatgrandChildSnapshot) {
                             var timestamp = +greatgrandChildSnapshot.child("Time").val();
                             var end = +greatgrandChildSnapshot.child("Duration").val() + timestamp;
                             array.push(new instance(timestamp, end));
                         });
                     });
-					hashmap.put(childname,array);
-					map[childname] = array;
+                    map[childname] = array;
                 });
             });
+			return Promise.resolve(map);
         }
-		
-        getDataFromDB(mac, time);
-		 function printKey() {
-				for(key in map){
-				console.log(key + map[key]);		
-				}
-		 }
-		 printKey();
-		 
-		/*
-		*/
+		getDataFromDB(mac, time).then(function(map){
+			var length = Object.keys(map).length;
+			Object.keys(map).forEach(function(child) {
+				 for (i = 0; i < map[child].length; i++) {
+					list.push(child);
+					list.push(map[child][i].getStart())
+					list.push(map[child][i].getEnd())
+				 }
+				// x += myObj.cars[i];
+			});
+			/*
+			 Object.keys(map).forEach(function(child) {
+                child.forEach(function(grandChild) {
+                    console.log(grandChild.getStart);
+                    console.log(grandChild.getEnd);
+                });
+            });
+			*/
+			var x=0;
+		});
+        /*
+        */
         // Set the configuration for your app
         // TODO: Replace with your project's config object
         /////////////////
-		getDataFromDB(mac, time);
-		console.log("re");
-		printKey();
-        window.onload = function() {
+        window.onload = async function() {
+			var list = [];
+			await getDataFromDB(mac, time).then(function(map){
+				var length = Object.keys(map).length;
+				Object.keys(map).forEach(function(child) {
+					 for (i = 0; i < map[child].length; i++) {
+						list.push(child);
+						list.push(map[child][i].getStart())
+						list.push(map[child][i].getEnd())
+					 }
+					// x += myObj.cars[i];
+				});
+				/*
+				 Object.keys(map).forEach(function(child) {
+					child.forEach(function(grandChild) {
+						console.log(grandChild.getStart);
+						console.log(grandChild.getEnd);
+					});
+				});
+				*/
+				var x=0;
+			});
+			var dataSet = [
+			{
+				x: 0,
+				label : list[0],
+				y : [list[1]*1000,list[2]*1000]
+			}
+			]
+			for(var i = 0 ;i <list.length;i=i+3){
+				if(list[i+1]<time && list[1+i] >= (time-86400000)){
+				dataSet.push({
+				x: i/3,
+				label : list[i],
+				y : [list[i+1]*1000,list[i+2]*1000],
+			});
+			}
+			console.log(list[i+2]);
+			}
+			
             var chart = new CanvasJS.Chart("chartContainer", {
                 title: {
                     text: ""
                 },
                 axisX: {
                     interval: 1,
+					type: String
                 },
                 axisY: {
-                    minimum: (new Date(2016, 0, 28, 00, 00)).getTime(),
-                    maximum: (new Date(2016, 0, 28, 23, 59)).getTime(),
-                    interval: (2 * 60 * 60 * 1000),
+                    minimum: time-86400000,
+                    maximum: time,
+                    interval: (86400000/12),
                     labelFormatter: function(e) {
-                        return CanvasJS.formatDate(e.value, "H:mm");
+                        return CanvasJS.formatDate(e.value, "DDD HH:mm");
                     },
                     gridThickness: 1
                 },
@@ -181,50 +161,14 @@
                 data: [{
                     type: "rangeBar",
                     color: "blue",
-                    dataPoints: [
+                    dataPoints: dataSet//[
                         //{x: uniquePerDevice (Maybe mac), label: deviceName, y:[(new Date(year, month, date, hour, mins)).getTime(),(new Date(year, month, date, hour, mins)).getTime()]}
-                        {
-                            x: 1,
-                            label: mac,
-                            y: [(new Date(2016, 0, 28, 12, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()]
-                        }, {
-                            x: 1,
-                            label: " Device Name 01 ",
-                            y: [(new Date(2016, 0, 28, 03, 00)).getTime(), (new Date(2016, 0, 28, 11, 40)).getTime()]
-                        }, {
-                            x: 2,
-                            label: " Device Name 02 ",
-                            y: [(new Date(2016, 0, 28, 13, 20)).getTime(), (new Date(2016, 0, 28, 14, 20)).getTime()]
-                        }, {
-                            x: 3,
-                            label: " Device Name 03 ",
-                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
-                        }, {
-                            x: 4,
-                            label: " Device Name 04 ",
-                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
-                        }, {
-                            x: 5,
-                            label: " Device Name 05 ",
-                            y: [(new Date(2016, 0, 28, 02, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()]
-                        }, {
-                            x: 6,
-                            label: " Device Name 06 ",
-                            y: [(new Date(2016, 0, 28, 12, 30)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()]
-                        }, {
-                            x: 7,
-                            label: " Device Name 07 ",
-                            y: [(new Date(2016, 0, 28, 13, 20)).getTime(), (new Date(2016, 0, 28, 14, 20)).getTime()]
-                        }, {
-                            x: 8,
-                            label: " Device Name 08 ",
-                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
-                        }, {
-                            x: 9,
-                            label: " Device Name 09 ",
-                            y: [(new Date(2016, 0, 28, 23, 20)).getTime(), (new Date(2016, 0, 28, 15, 00)).getTime()]
-                        }
-                    ]
+                     //   {
+                     //       x: 1,
+                     //       label: mac,
+                     //       y: [(new Date(2016, 0, 28, 12, 20)).getTime(), (new Date(2016, 0, 28, 13, 00)).getTime()],
+                     //   }
+                  //  ]
                 }]
             });
             chart.render();
@@ -236,7 +180,7 @@
 <div class="container-fluid bg-light">
     <div id="chartContainer" style="height: 300px; width: 100%;"></div>
     <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js">
-            < /div> < p id = 'message' > < /p> < /main>
+            < /div> < p id = 'message' > < /p > < /main>
             < script src = "https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity = "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin = "anonymous" >
