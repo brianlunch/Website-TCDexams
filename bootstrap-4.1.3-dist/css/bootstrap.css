@@ -5111,19 +5111,20 @@ input[type="button"].btn-block {
 
 .list-group-item-action {
   width: 100%;
-  color: #495057;
+  color: #FFFFFF;
+  background-color: #FFF;
   text-align: inherit;
 }
 
 .list-group-item-action:hover, .list-group-item-action:focus {
   color: #495057;
   text-decoration: none;
-  background-color: #f8f9fa;
+  background-color: #FFF;
 }
 
 .list-group-item-action:active {
-  color: #212529;
-  background-color: #e9ecef;
+  color: #ffffff;
+  background-color: #000;
 }
 
 .list-group-item {
@@ -5159,8 +5160,8 @@ input[type="button"].btn-block {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: gray;
+  border-color: gray;
 }
 
 .list-group-flush .list-group-item {
@@ -5179,7 +5180,7 @@ input[type="button"].btn-block {
 
 .list-group-item-primary {
   color: #004085;
-  background-color: #b8daff;
+  background-color: #FFFFFF;
 }
 
 .list-group-item-primary.list-group-item-action:hover, .list-group-item-primary.list-group-item-action:focus {
