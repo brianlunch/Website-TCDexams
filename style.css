@@ -1,9 +1,10 @@
-
-
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: #FFFFFF !important;
 }
 
+body {
+    font-family: 'Abel';font-size: 20px;
+}
 
 @media (min-width: 768px)
 {
