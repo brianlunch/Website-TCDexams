@@ -1,25 +1,4 @@
 
-.row{
-	
-	height: 100vh;
-}
-body, html {
-  height: 100%;
-  font-family: 'Abel';font-size: 20px;
-}
-
-.bg {
-  /* The image used */
-  background-image: url("https://cdn1us.denofgeek.com/sites/denofgeekus/files/styles/main_wide/public/matrix_2.jpg?itok=p-5QXQxj");
-
-  /* Full height */
-  height: 100%;
-
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
 
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: #FFFFFF !important;
