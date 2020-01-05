@@ -6132,9 +6132,9 @@ a.bg-danger:focus,a.bg-danger:hover,button.bg-danger:focus,button.bg-danger:hove
 background-color:#bd2130!important
 }
 
-.bg-light{
-background-color:#f8f9fa!important
-}
+	.bg-light{
+	background-color:#f8f9fa!important
+	}
 
 a.bg-light:focus,a.bg-light:hover,button.bg-light:focus,button.bg-light:hover{
 background-color:#dae0e5!important
